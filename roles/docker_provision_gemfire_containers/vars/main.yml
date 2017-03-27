@@ -1,0 +1,21 @@
+gf_containers:
+  - name: gf-locator1
+    ip: 172.18.0.2
+    gemfire_port: 10334
+    published_ports: 22,10334
+    type: locator
+  - name: gf-locator2
+    ip: 172.18.0.3
+    gemfire_port: 10334
+    published_ports: 22,10334
+    type: locator
+  - name: gf-server1
+    ip: 172.18.0.4
+    gemfire_port: 40404
+    published_ports: 22,40404
+    type: server
+  - name: gf-server2
+    ip: 172.18.0.5
+    gemfire_port: 40404
+    published_ports: 22,40404
+    type: server

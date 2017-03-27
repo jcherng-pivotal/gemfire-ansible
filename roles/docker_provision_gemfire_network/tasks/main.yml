@@ -1,0 +1,15 @@
+---
+#This Playbook configures the gemfire docker network
+
+- name: create the gemfire network
+  docker_network:
+    name: gemfire-net
+    driver_options:
+      com.docker.network.bridge.name: "gemfire-net"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.bridge.host_binding_ipv4: "0.0.0.0"
+      com.docker.network.driver.mtu: "1500"
+    ipam_options:
+      subnet: '172.18.0.0/16'
+      gateway: 172.18.0.1

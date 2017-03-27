@@ -1,0 +1,34 @@
+---
+#This Playbook installs gemfire from archived file
+
+
+- name: create pivotal top level directories if they don't exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: pivotal
+    mode: "u=rwx,g=rwx,o=rx"
+  become: true
+  become_method: sudo
+  with_items: "{{ pivotal_dirs }}"
+
+
+- name: create gemfire directories if they don't exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: gemfire
+    group: pivotal
+    mode: "u=rwx,g=rx,o=rx"
+  become: true
+  become_method: sudo
+  with_items: "{{ gemfire_dirs }}"
+
+
+- name: install gemfire under /opt/piotal
+  unarchive:
+    src: "{{ playbook_dir }}/files/{{ gemfire_archived_file }}"
+    dest: /opt/pivotal
+  become: true
+  become_method: sudo

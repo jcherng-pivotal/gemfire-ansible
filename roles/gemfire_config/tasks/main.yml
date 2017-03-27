@@ -1,0 +1,11 @@
+---
+#This Playbook setup gemfire configurations
+
+- name: create gemfire directories if they don't exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: gemfire
+    group: pivotal
+    mode: "u=rwx,g=rwx,o=rx"
+  with_items: "{{ gemfire_dirs }}"

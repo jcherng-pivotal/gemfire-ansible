@@ -1,0 +1,36 @@
+
+---
+
+- name: wait for gemfire docker containers
+  local_action: wait_for port=22 host="{{ item }}"
+                search_regex=OpenSSH
+                state=started
+  with_items: "{{ groups['gf_hosts'] }}"
+
+
+- name: create pivotal group
+  delegate_to: "{{ item }}"
+  become: true
+  become_method: sudo
+  command: groupadd -f pivotal
+  with_items: "{{ groups['gf_hosts'] }}"
+
+
+- name: set gemfire primary group to pivotal
+  delegate_to: "{{ item }}"
+  become: true
+  become_method: sudo
+  command: usermod -g pivotal gemfire
+  with_items: "{{ groups['gf_hosts'] }}"
+
+
+- name: install other necessary packages
+  delegate_to: "{{ item[0] }}"
+  become: true
+  become_method: sudo
+  yum:
+    name: "{{ item[1] }}"
+    state: latest
+  with_nested:
+    - "{{ groups['gf_hosts'] }}"
+    - "{{ packages_to_be_installed }}"

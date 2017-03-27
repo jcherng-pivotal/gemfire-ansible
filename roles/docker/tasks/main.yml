@@ -1,0 +1,28 @@
+---
+
+- name: install updated docker brew cask applications
+  command: "brew cask install {{ item.force | default('') }} {{ item.name }}"
+  with_items: "{{ docker_brew_cask_apps }}"
+  tags:
+    - brew
+    - brew-cask
+    - brew-cask-updates
+    - docker
+
+- name: install docker homebrew packages
+  homebrew:
+    name: "{{ item.name }}"
+    install_options: "{{ item.install_options | default('') }}"
+    state: latest
+  with_items: "{{ docker_brew_packages }}"
+  tags:
+    - brew
+    - docker
+
+- name: create default docker machines
+  command: "docker-machine create --driver virtualbox default"
+  ignore_errors: yes
+
+#sudo /sbin/route -n add -net 172.18.0.0 -netmask 255.255.0.0 -gateway $(docker-machine ip)
+- name: setup network route
+  command: "sudo /sbin/route -n add -net 172.18.0.0 -netmask 255.255.0.0 -gateway 192.168.99.100"

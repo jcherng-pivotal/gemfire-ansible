@@ -1,0 +1,9 @@
+gemfire_dirs:
+  - /usr/pivotal/gemfire
+  - /usr/pivotal/gemfire/app
+  - /usr/pivotal/gemfire/bin
+  - /usr/pivotal/gemfire/config
+  - /usr/pivotal/gemfire/lib
+  - /usr/pivotal/gemfire/app/config
+  - /usr/pivotal/gemfire/app/lib
+  - /var/pivotal/gemfire

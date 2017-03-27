@@ -1,0 +1,31 @@
+---
+# This Playbook would setup a local gemfire cluster by using docker
+
+- name: setup gemfire docker containers
+  hosts: localhost
+  roles:
+    - docker
+    - docker_provision_gemfire_network
+    - docker_provision_gemfire_containers
+
+
+- name: finalize gemfire docker containers
+  hosts: gf_hosts
+  roles:
+    - docker_finalize_gemfire_container
+    - williamyeh.oracle-java
+  vars:
+    java_download_from_oracle: false
+    java_remove_download: false
+    java_version: 8
+    java_subversion: 121
+    java_build: 13
+  become: true
+  become_method: sudo
+
+
+- name: install gemfire
+  hosts: gf_hosts
+  remote_user: gemfire
+  roles:
+    - role: gemfire_install

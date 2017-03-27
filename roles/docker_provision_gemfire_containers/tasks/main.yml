@@ -1,0 +1,39 @@
+---
+#This Playbook configures gemfire docker containers
+
+- name: prepare gf_hosts inventory by using gf_containers' information
+  add_host: name={{ item.ip }}
+            groups=gf_hosts
+            ansible_user=gemfire
+  with_items: "{{ gf_containers }}"
+
+
+- name: set fact for etc_hosts by using gf_containers' information
+  set_fact:
+    etc_hosts: "{{ etc_hosts|default({}) | combine( {item.name: item.ip} ) }}"
+  with_items: "{{ gf_containers }}"
+
+
+- name: add gemfire containers to network bridge (gemfire-net)
+  docker_container:
+    name: "{{ item.name }}"
+    hostname: "{{ item.name }}"
+    image: jdeathe/centos-ssh:centos-7
+    recreate: true
+    published_ports: "{{ item.published_ports }}"
+    networks:
+      - name: gemfire-net
+        ipv4_address: "{{ item.ip }}"
+    purge_networks: yes
+    etc_hosts: "{{ etc_hosts }}"
+    env:
+      SSH_USER: "{{ ansible_env.SSH_USER }}"
+      SSH_AUTHORIZED_KEYS: "{{ ansible_env.SSH_AUTHORIZED_KEYS }}"
+      SSH_SUDO: "ALL=(ALL) NOPASSWD:ALL"
+  with_items: "{{ gf_containers }}"
+
+- name: wait for gemfire docker containers to come up
+  local_action: wait_for port=22 host="{{ item.ip }}"
+                search_regex=OpenSSH
+                state=started
+  with_items: "{{ gf_containers }}"
