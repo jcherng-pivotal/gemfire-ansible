@@ -14,6 +14,11 @@
   with_items: "{{ gf_containers }}"
 
 
+- name: register ssh authorized key for the gemfire containers
+  shell: echo $(cat ${HOME}/.ssh/id_rsa.pub | base64 -i -)
+  register: ssh_authorized_key
+
+
 - name: add gemfire containers to network bridge (gemfire-net)
   docker_container:
     name: "{{ item.name }}"
@@ -27,10 +32,11 @@
     purge_networks: yes
     etc_hosts: "{{ etc_hosts }}"
     env:
-      SSH_USER: "{{ ansible_env.SSH_USER }}"
-      SSH_AUTHORIZED_KEYS: "{{ ansible_env.SSH_AUTHORIZED_KEYS }}"
-      SSH_SUDO: "ALL=(ALL) NOPASSWD:ALL"
+      SSH_AUTHORIZED_KEYS: "{{ ssh_authorized_key.stdout }}"
+      SSH_USER: gemfire
+      SSH_SUDO: ALL=(ALL) NOPASSWD:ALL
   with_items: "{{ gf_containers }}"
+
 
 - name: wait for gemfire docker containers to come up
   local_action: wait_for port=22 host="{{ item.ip }}"
