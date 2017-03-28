@@ -22,7 +22,6 @@ Download the folowing files and place under gemfire-ansible/files/:
 under gemfire-ansible, run the following commands to getup local gemfire cluster (docker):
 ```scripts/bootstrap
 sudo ansible-galaxy install williamyeh.oracle-java
-bash -c "clear && DOCKER_HOST=tcp://192.168.99.50:2376 DOCKER_CERT_PATH=~/.docker/machine/machines/gemfire DOCKER_TLS_VERIFY=1 SSH_AUTHORIZED_KEYS=$(cat ${HOME}/.ssh/id_rsa.pub | base64 -i -) SSH_USER=gemfire /bin/bash"
 ansible-playbook setup_gemfire.yml
 ```
 
@@ -33,6 +32,10 @@ The Ansible playbook will create 4 docker containers, gf-locator1, gf-locator2, 
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no gemfire@172.18.0.3
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no gemfire@172.18.0.4
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no gemfire@172.18.0.5
+```
+
+Use the following command in the terminal first if there is need to access the gemfire containers through docker cli. This step is not needed when accessing the gemfire containers through the ssh:
+```bash -c "clear && DOCKER_HOST=tcp://192.168.99.50:2376 DOCKER_CERT_PATH=~/.docker/machine/machines/gemfire DOCKER_TLS_VERIFY=1 /bin/bash"
 ```
 
 ## Helpful Docker commands
@@ -52,3 +55,18 @@ rm -f /usr/local/bin/docker-compose
 rm -f /usr/local/bin/docker-machine
 rm -rf ~/.docker
 ```
+
+### TODO (in not particular order)
+
+- [ ] start GemFire
+- [ ] stop GemFire
+- [ ] rolling restart
+- [ ] config/jar deployment
+- [ ] split the playbook (better management)  
+- [ ] improve the performance (time need for automation)
+- [ ] clean up all the warnings
+- [ ] better handle sudo for local connection (localhost)
+- [ ] review/enhance variable definitions (default, vars, and etc)
+- [ ] clean up/enhance the documentations
+- [ ] review and clean up each role
+- [ ] others
