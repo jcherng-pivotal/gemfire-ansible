@@ -61,7 +61,7 @@ rm -f /usr/local/bin/docker-machine
 rm -rf ~/.docker
 ```
 
-### TODO (in not particular order)
+### TODO (in no particular order)
 
 - [ ] start GemFire
 - [ ] stop GemFire
