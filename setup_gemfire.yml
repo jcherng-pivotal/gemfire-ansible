@@ -7,6 +7,10 @@
     - docker
     - docker_provision_gemfire_network
     - docker_provision_gemfire_containers
+  environment:
+    DOCKER_HOST: tcp://192.168.99.50:2376
+    DOCKER_CERT_PATH: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire"
+    DOCKER_TLS_VERIFY: 1
 
 
 - name: finalize gemfire docker containers
@@ -28,4 +32,4 @@
   hosts: gf_hosts
   remote_user: gemfire
   roles:
-    - role: gemfire_install
+    - gemfire_install

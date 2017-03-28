@@ -22,7 +22,7 @@ Download the folowing files and place under gemfire-ansible/files/:
 under gemfire-ansible, run the following commands to getup local gemfire cluster (docker):
 ```scripts/bootstrap
 sudo ansible-galaxy install williamyeh.oracle-java
-bash -c "clear && DOCKER_HOST=tcp://192.168.99.100:2376 DOCKER_CERT_PATH=~/.docker/machine/machines/default DOCKER_TLS_VERIFY=1 SSH_AUTHORIZED_KEYS=$(cat ${HOME}/.ssh/id_rsa.pub | base64 -i -) SSH_USER=gemfire /bin/bash"
+bash -c "clear && DOCKER_HOST=tcp://192.168.99.50:2376 DOCKER_CERT_PATH=~/.docker/machine/machines/gemfire DOCKER_TLS_VERIFY=1 SSH_AUTHORIZED_KEYS=$(cat ${HOME}/.ssh/id_rsa.pub | base64 -i -) SSH_USER=gemfire /bin/bash"
 ansible-playbook setup_gemfire.yml
 ```
 
