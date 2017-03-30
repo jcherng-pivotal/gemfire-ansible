@@ -24,6 +24,7 @@
     java_version: 8
     java_subversion: 121
     java_build: 13
+    java_set_javahome: true
   become: true
   become_method: sudo
 

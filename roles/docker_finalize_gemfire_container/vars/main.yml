@@ -1,4 +1,5 @@
 packages_to_be_installed:
+  - which
   - man
   - man-pages
   - unzip
