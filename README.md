@@ -23,7 +23,8 @@ under gemfire-ansible, run the following commands to getup local gemfire cluster
 ```
 scripts/bootstrap
 sudo ansible-galaxy install williamyeh.oracle-java
-ansible-playbook setup_gemfire.yml
+ansible-playbook playbook_gemfire_containers_setup.yml
+ansible-playbook -i hosts playbook_gemfire_install_config.yml
 ```
 
 ## Verify Local GemFire Docker Containers
@@ -41,9 +42,12 @@ Use the following command in the terminal first if there is need to access the g
 bash -c "clear && DOCKER_HOST=tcp://192.168.99.50:2376 DOCKER_CERT_PATH=~/.docker/machine/machines/gemfire DOCKER_TLS_VERIFY=1 /bin/bash"
 ```
 
-## Helpful Docker commands
+## Helpful Docker Commands For Resting Docker Containers
 
 ```
+docker-machine restart gemfire
+docker restart $(docker ps -a -q)
+docker start $(docker ps -a -q)
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 docker container prune

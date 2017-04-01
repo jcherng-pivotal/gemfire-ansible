@@ -1,11 +1,28 @@
 ---
 #This Playbook setup gemfire configurations
 
-- name: create gemfire directories if they don't exist
-  file:
-    path: "{{ item }}"
-    state: directory
+- name: set fact for locators by using gf_containers' information
+  set_fact:
+    locators: "{% set comma = joiner(',') %}{% for host in groups['gf_locators'] -%}{{ comma() }}{{ hostvars[host]['bind_address'] }}[{{ hostvars[host]['port'] }}]{%- endfor %}"
+
+
+- name: copy the bin files to hosts
+  template:
+    src: "{{ item }}"
+    dest: "/usr/pivotal/gemfire/bin/{{ item | basename | regex_replace('\\.j2','') }}"
     owner: gemfire
     group: pivotal
-    mode: "u=rwx,g=rwx,o=rx"
-  with_items: "{{ gemfire_dirs }}"
+    mode: "u=rwx,g=r,o=r"
+  with_fileglob:
+    - "../templates/{{ host_type }}/bin/*"
+
+
+- name: copy the config files to hosts
+  template:
+    src: "{{ item }}"
+    dest: "/usr/pivotal/gemfire/config/{{ item | basename | regex_replace('\\.j2','') }}"
+    owner: gemfire
+    group: pivotal
+    mode: "u=rw,g=r,o=r"
+  with_fileglob:
+    - "../templates/{{ host_type }}/config/*"

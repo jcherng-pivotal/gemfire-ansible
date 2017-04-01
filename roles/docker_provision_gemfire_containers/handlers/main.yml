@@ -5,7 +5,7 @@
   local_action: wait_for port=22 host="{{ item }}"
                 search_regex=OpenSSH
                 state=started
-  with_items: "{{ groups['gf_hosts'] }}"
+  with_items: "{{ groups['gf_cluster'] }}"
 
 
 - name: create pivotal group
@@ -13,7 +13,7 @@
   become: true
   become_method: sudo
   command: groupadd -f pivotal
-  with_items: "{{ groups['gf_hosts'] }}"
+  with_items: "{{ groups['gf_cluster'] }}"
 
 
 - name: set gemfire primary group to pivotal
@@ -21,7 +21,7 @@
   become: true
   become_method: sudo
   command: usermod -g pivotal gemfire
-  with_items: "{{ groups['gf_hosts'] }}"
+  with_items: "{{ groups['gf_cluster'] }}"
 
 
 - name: install other necessary packages
@@ -32,5 +32,5 @@
     name: "{{ item[1] }}"
     state: latest
   with_nested:
-    - "{{ groups['gf_hosts'] }}"
+    - "{{ groups['gf_cluster'] }}"
     - "{{ packages_to_be_installed }}"

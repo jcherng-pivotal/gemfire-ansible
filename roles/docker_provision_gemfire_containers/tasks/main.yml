@@ -1,9 +1,9 @@
 ---
 #This Playbook configures gemfire docker containers
 
-- name: prepare gf_hosts inventory by using gf_containers' information
+- name: prepare gf_cluster inventory by using gf_containers' information
   add_host: name={{ item.ip }}
-            groups=gf_hosts
+            groups=gf_cluster
             ansible_user=gemfire
   with_items: "{{ gf_containers }}"
 

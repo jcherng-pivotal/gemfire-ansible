@@ -1,0 +1,19 @@
+[gf_locators]
+172.18.0.2    bind_address=172.18.0.2 hostname_for_clients=172.18.0.2
+172.18.0.3    bind_address=172.18.0.3 hostname_for_clients=172.18.0.3
+
+[gf_servers]
+172.18.0.4    bind_address=172.18.0.4 hostname_for_clients=172.18.0.4
+172.18.0.5    bind_address=172.18.0.5 hostname_for_clients=172.18.0.5
+
+[gf_locators:vars]
+host_type=locator
+port=10334
+
+[gf_servers:vars]
+host_type=server
+server_port=40404
+
+[gf_cluster:children]
+gf_locators
+gf_servers

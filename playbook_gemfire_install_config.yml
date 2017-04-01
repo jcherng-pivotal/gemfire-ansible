@@ -1,0 +1,9 @@
+---
+# This Playbook would install and config gemfire
+
+- name: install gemfire
+  hosts: gf_cluster
+  remote_user: gemfire
+  roles:
+    - gemfire_install
+    - gemfire_config
