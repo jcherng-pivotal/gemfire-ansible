@@ -1,12 +1,34 @@
 ---
 #This Playbook setup gemfire configurations
 
-- name: set fact for locators by using gf_containers' information
+- name: set fact for locators by using hostvars information
   set_fact:
-    locators: "{% set comma = joiner(',') %}{% for host in groups['gf_locators'] -%}{{ comma() }}{{ hostvars[host]['bind_address'] }}[{{ hostvars[host]['port'] }}]{%- endfor %}"
+    locators: "{% set comma = joiner(',') %}{% for host in groups['gf_locators'] -%}{{ comma() }}{{ hostvars[host]['bind_address'] }}[{{ hostvars[host]['locator_port'] }}]{%- endfor %}"
 
 
-- name: copy the bin files to hosts
+- name: copy the common bin files to hosts
+  template:
+    src: "{{ item }}"
+    dest: "/usr/pivotal/gemfire/bin/{{ item | basename | regex_replace('\\.j2','') }}"
+    owner: gemfire
+    group: pivotal
+    mode: "u=rwx,g=r,o=r"
+  with_fileglob:
+    - "common/bin/*"
+
+
+- name: copy the common config files to hosts
+  template:
+    src: "{{ item }}"
+    dest: "/usr/pivotal/gemfire/config/{{ item | basename | regex_replace('\\.j2','') }}"
+    owner: gemfire
+    group: pivotal
+    mode: "u=rw,g=r,o=r"
+  with_fileglob:
+    - "common/config/*"
+
+
+- name: copy the template bin files to hosts
   template:
     src: "{{ item }}"
     dest: "/usr/pivotal/gemfire/bin/{{ item | basename | regex_replace('\\.j2','') }}"
@@ -17,7 +39,7 @@
     - "../templates/{{ host_type }}/bin/*"
 
 
-- name: copy the config files to hosts
+- name: copy the template config files to hosts
   template:
     src: "{{ item }}"
     dest: "/usr/pivotal/gemfire/config/{{ item | basename | regex_replace('\\.j2','') }}"

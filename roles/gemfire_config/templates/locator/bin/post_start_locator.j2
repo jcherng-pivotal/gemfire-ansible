@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+source /usr/pivotal/gemfire/bin/setenv.sh
+source /usr/pivotal/gemfire/bin/pid_utils.sh
+
+NUM_RETRIES=30
+SLEEP_TIME=5
+
+for i in $(seq 1 "$NUM_RETRIES"); do
+    if gfsh -e "connect --locator="$LOCATOR_BIND_ADDRESS[$LOCATOR_PORT]""; then
+      exit 0
+    else
+      sleep "$SLEEP_TIME"
+    fi
+done
+
+echo "ERROR: Failed to connect to locator using gfsh"
+exit 1

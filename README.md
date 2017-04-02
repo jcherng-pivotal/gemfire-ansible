@@ -42,6 +42,15 @@ Use the following command in the terminal first if there is need to access the g
 bash -c "clear && DOCKER_HOST=tcp://$(docker-machine ip gemfire):2376 DOCKER_CERT_PATH=~/.docker/machine/machines/gemfire DOCKER_TLS_VERIFY=1 /bin/bash"
 ```
 
+## Accessing Docker Containers After Restarting Mac
+As the network route to the docker containers will not be persisted after restarting the Mac, we will need run few commands to establish the environment for the existing docker containers without re-run the full Ansible playbook (re-provision docker containers).
+```
+docker-machine start gemfire
+bash -c "clear && DOCKER_HOST=tcp://$(docker-machine ip gemfire):2376 DOCKER_CERT_PATH=~/.docker/machine/machines/gemfire DOCKER_TLS_VERIFY=1 /bin/bash"
+docker restart $(docker ps -a -q)
+sudo /sbin/route -n add -net 172.18.0.0 -netmask 255.255.0.0 -gateway $(docker-machine ip gemfire)
+```
+
 ## Helpful Docker Commands For Resting Docker Containers
 
 ```

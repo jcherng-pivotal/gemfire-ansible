@@ -1,0 +1,21 @@
+#!/bin/bash
+
+export JAVA_HOME=/usr/java/default
+export GEMFIRE=/opt/pivotal/pivotal-gemfire-9.0.2
+export PATH=$JAVA_HOME/bin:$GEMFIRE/bin:$PATH
+
+export GEMFIRE_HOME=$GEMFIRE
+export GEMFIRE_BASE=/usr/pivotal/gemfire
+export GEMFIRE_STORE=/var/pivotal/gemfire/{{ locator_name }}
+
+export CLASSPATH=$GEMFIRE_BASE/lib/*:$GEMFIRE_BASE/config:$GEMFIRE_BASE/app/lib/*:$GEMFIRE_BASE/app/config
+
+export LOCATOR_NAME={{ locator_name }}
+export LOCATOR_BIND_ADDRESS={{ bind_address }}
+export LOCATOR_HOSTNAME_FOR_CLIENTS={{ hostname_for_clients }}
+export LOCATOR_PORT={{ locator_port }}
+export LOCATORS={{ locators }}
+
+export JVM_ARGS="--J=-XX:MaxMetaspaceSize=112m --J=-XX:MetaspaceSize=112m --J=-XX:+CMSClassUnloadingEnabled --J=-XX:+UseParNewGC --J=-XX:+DisableExplicitGC --J=-XX:+PrintGCDetails --J=-XX:+PrintGCTimeStamps --J=-XX:+PrintGCDateStamps --J=-XX:+PrintGCApplicationStoppedTime --J=-XX:+PrintGCApplicationConcurrentTime --J=-XX:+UseGCLogFileRotation --J=-XX:NumberOfGCLogFiles=20 --J=-XX:GCLogFileSize=1M --J=-XX:OnOutOfMemoryError='kill -9 %p'"
+
+# --lock-memory=true

@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -ex
+
+source /usr/pivotal/gemfire/bin/setenv.sh
+source /usr/pivotal/gemfire/bin/pid_utils.sh
+
+PIDFILE=$GEMFIRE_STORE/vf.gf.locator.pid
+
+mkdir -p $GEMFIRE_STORE $GEMFIRE_STORE/log
+chown -R gemfire:pivotal $GEMFIRE_STORE $GEMFIRE_STORE/log
+
+touch $GEMFIRE_STORE/log/locator_ctl.std{out,err}.log
+
+exec > >(tee --append $GEMFIRE_STORE/log/locator_ctl.stdout.log)
+exec 2> >(tee --append $GEMFIRE_STORE/log/locator_ctl.stderr.log)
+
+echo -e "\n---- Executing subcommand: $1 $(date) ----"
+
+case $1 in
+  start)
+
+    pid_guard $PIDFILE LocatorLauncher
+
+    exec gfsh start locator \
+      --dir=$GEMFIRE_STORE \
+      --name=$LOCATOR_NAME \
+      --bind-address=$LOCATOR_BIND_ADDRESS \
+      --hostname-for-clients=$LOCATOR_HOSTNAME_FOR_CLIENTS \
+      --port=$LOCATOR_PORT \
+      --locators="$LOCATORS" \
+      --properties-file=$GEMFIRE_BASE/config/gemfire.properties \
+      --security-properties-file=$GEMFIRE_BASE/config/gfsecurity.properties \
+      --max-heap=512m \
+      --initial-heap=512m \
+      --enable-cluster-configuration=true \
+      --force=true \
+      --J=-Djava.rmi.server.hostname=$LOCATOR_HOSTNAME_FOR_CLIENTS \
+      --J=-Xloggc:$GEMFIRE_STORE/log/locator_gc.log \
+      --J=-Dgemfire.OSProcess.ENABLE_OUTPUT_REDIRECTION=true \
+      --J=-Dgemfire.http-service-port=8080 \
+      --J=-Dgemfire.http-service-bind-address=$LOCATOR_HOSTNAME_FOR_CLIENTS \
+      --classpath=$CLASSPATH \
+      $JVM_ARGS
+    ;;
+
+  stop)
+    set +x
+
+    echo 'gfsh -e "connect --locator='$LOCATOR_BIND_ADDRESS[$LOCATOR_PORT]'" ' \
+      '-e "stop locator --name={{ locator_name }}" || true'
+    gfsh -e "connect --locator='$LOCATOR_BIND_ADDRESS[$LOCATOR_PORT]'" \
+      -e "stop locator --name={{ locator_name }}" || true
+
+    set -x
+
+    kill_and_wait $PIDFILE
+    ;;
+
+  *)
+    echo "Usage: locator_ctl {start|stop}"
+    ;;
+
+esac
