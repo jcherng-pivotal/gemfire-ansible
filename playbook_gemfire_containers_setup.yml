@@ -1,16 +1,31 @@
 ---
 # This Playbook would setup a local gemfire docker containers
 
-- name: setup gemfire docker containers
+- name: setup docker and gemfire docker machine
   hosts: localhost
   roles:
     - docker
+  # environment:
+  #   DOCKER_HOST: tcp://192.168.99.50:2376
+  #   DOCKER_CERT_PATH: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire"
+  #   DOCKER_TLS_VERIFY: 1
+  post_tasks:
+    - name: register docker_host_echo
+      shell: echo tcp://$(docker-machine ip gemfire):2376
+      register: docker_host_echo
+    - name: set facts for docker containers
+      set_fact:
+        docker_host: "{{ docker_host_echo.stdout }}"
+        cert_path: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire/cert.pem"
+        key_path: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire/key.pem"
+        tls_verify: 1
+
+
+- name: setup gemfire docker network and containers
+  hosts: localhost
+  roles:
     - docker_provision_gemfire_network
     - docker_provision_gemfire_containers
-  environment:
-    DOCKER_HOST: tcp://192.168.99.50:2376
-    DOCKER_CERT_PATH: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire"
-    DOCKER_TLS_VERIFY: 1
 
 
 - name: finalize gemfire docker containers

@@ -21,6 +21,10 @@
 
 - name: add gemfire containers to network bridge (gemfire-net)
   docker_container:
+    docker_host: "{{ docker_host }}"
+    cert_path: "{{ cert_path }}"
+    key_path: "{{ key_path }}"
+    tls_verify: "{{ tls_verify }}"
     name: "{{ item.name }}"
     hostname: "{{ item.name }}"
     image: jdeathe/centos-ssh:centos-7

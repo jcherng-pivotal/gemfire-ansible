@@ -25,8 +25,8 @@
 - name: create gemfire docker machine for gemfire network and containers
   command: docker-machine create --driver virtualbox gemfire
 
-- name: setup static ip (192.168.99.50) for gemfire docker machine
-  shell: echo "kill `more /var/run/udhcpc.eth1.pid`\nifconfig eth1 192.168.99.50 netmask 255.255.255.0 broadcast 192.168.99.255 up" | docker-machine ssh gemfire sudo tee /var/lib/boot2docker/bootsync.sh > /dev/null
+# - name: setup static ip (192.168.99.50) for gemfire docker machine
+#   shell: echo "kill `more /var/run/udhcpc.eth1.pid`\nifconfig eth1 192.168.99.50 netmask 255.255.255.0 broadcast 192.168.99.255 up" | docker-machine ssh gemfire sudo tee /var/lib/boot2docker/bootsync.sh > /dev/null
 
 - name: restart gemfire docker machine
   command: docker-machine restart gemfire

@@ -39,7 +39,7 @@ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no gemfire@172.18.0
 
 Use the following command in the terminal first if there is need to access the gemfire containers through docker cli. This step is not needed when accessing the gemfire containers through the ssh:
 ```
-bash -c "clear && DOCKER_HOST=tcp://192.168.99.50:2376 DOCKER_CERT_PATH=~/.docker/machine/machines/gemfire DOCKER_TLS_VERIFY=1 /bin/bash"
+bash -c "clear && DOCKER_HOST=tcp://$(docker-machine ip gemfire):2376 DOCKER_CERT_PATH=~/.docker/machine/machines/gemfire DOCKER_TLS_VERIFY=1 /bin/bash"
 ```
 
 ## Helpful Docker Commands For Resting Docker Containers
