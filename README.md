@@ -25,6 +25,7 @@ scripts/bootstrap
 sudo ansible-galaxy install williamyeh.oracle-java
 ansible-playbook playbook_gemfire_containers_setup.yml
 ansible-playbook -i hosts playbook_gemfire_install_config.yml
+ansible-playbook -i hosts playbook_gemfire_rolling_restart.yml
 ```
 
 ## Verify Local GemFire Docker Containers
@@ -76,10 +77,12 @@ rm -rf ~/.docker
 
 ### TODO (in no particular order)
 
-- [ ] start GemFire
-- [ ] stop GemFire
-- [ ] rolling restart
-- [ ] config/jar deployment
+- [X] install GemFire
+- [X] configuration management
+- [ ] jars deployment
+- [X] start GemFire
+- [X] stop GemFire
+- [X] rolling restart
 - [ ] split the playbook (better management)  
 - [ ] improve the performance (time need for automation)
 - [ ] clean up all the warnings

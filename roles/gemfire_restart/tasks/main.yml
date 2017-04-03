@@ -1,0 +1,14 @@
+---
+#This Playbook restarts gemfire members
+
+
+- name: stop gemfire member
+  shell: "/usr/pivotal/gemfire/bin/{{ host_type }}_ctl stop"
+
+
+- name: start gemfire member
+  shell: "/usr/pivotal/gemfire/bin/{{ host_type }}_ctl start"
+
+
+- name: verify gemfire member
+  shell: "/usr/pivotal/gemfire/bin/post_start_{{ host_type }}"

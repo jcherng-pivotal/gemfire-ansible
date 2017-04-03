@@ -22,7 +22,7 @@ case $1 in
 
     pid_guard $PIDFILE ServerLauncher
 
-    sysctl -p $GEMFIRE_BASE/config/sysctl.gemfire.conf
+    /usr/sbin/sysctl -p $GEMFIRE_BASE/config/sysctl.gemfire.conf
 
     exec gfsh start server \
       --dir=$GEMFIRE_STORE \

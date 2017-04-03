@@ -1,0 +1,9 @@
+---
+# This Playbook would restart gemfire cluster
+
+- name: install gemfire
+  hosts: gf_cluster
+  remote_user: gemfire
+  serial: 1
+  roles:
+    - gemfire_restart
