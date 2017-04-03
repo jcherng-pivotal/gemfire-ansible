@@ -28,7 +28,7 @@ ansible-playbook -i hosts playbook_gemfire_install_config.yml
 ansible-playbook -i hosts playbook_gemfire_rolling_restart.yml
 ```
 
-## Verify Local GemFire Docker Containers
+## Verify Local GemFire Docker Containers (Mac Only)
 
 The Ansible playbook will create 4 docker containers, gf-locator1, gf-locator2, gf-server1, and gf-server2. To verify the provisioned containers, use the following command to ssh into each container.
 ```
@@ -38,7 +38,7 @@ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no gemfire@172.18.0
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no gemfire@172.18.0.5
 ```
 
-Use the following command in the terminal first if there is need to access the gemfire containers through docker cli. This step is not needed when accessing the gemfire containers through the ssh:
+Use the following command in the local Mac's terminal first if there is need to access the gemfire containers through docker cli. This step is not needed when accessing the gemfire containers through the ssh:
 ```
 bash -c "clear && DOCKER_HOST=tcp://$(docker-machine ip gemfire):2376 DOCKER_CERT_PATH=~/.docker/machine/machines/gemfire DOCKER_TLS_VERIFY=1 /bin/bash"
 ```
@@ -84,7 +84,7 @@ rm -rf ~/.docker
 - [X] stop GemFire
 - [X] rolling restart
 - [ ] split the playbook (better management)  
-- [ ] improve the performance (time need for automation)
+- [ ] improve the performance (time needed for automation)
 - [ ] clean up all the warnings
 - [ ] better handle sudo for local connection (localhost)
 - [ ] review/enhance variable definitions (default, vars, and etc)
