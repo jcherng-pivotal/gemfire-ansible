@@ -1,0 +1,46 @@
+#!/bin/bash
+
+export JAVA_HOME=/usr/java/default
+export GEMFIRE=/opt/pivotal/pivotal-gemfire-9.0.2
+export PATH=$JAVA_HOME/bin:$GEMFIRE/bin:$PATH
+
+export GEMFIRE_HOME=$GEMFIRE
+export GEMFIRE_BASE=/usr/pivotal/gemfire
+export GEMFIRE_STORE=/var/pivotal/gemfire/{{ server_name }}
+
+export CLASSPATH=$GEMFIRE_BASE/lib/*:$GEMFIRE_BASE/config:$GEMFIRE_BASE/app/lib/*:$GEMFIRE_BASE/app/config
+
+export SERVER_NAME={{ server_name }}
+export SERVER_BIND_ADDRESS={{ bind_address }}
+export SERVER_HOSTNAME_FOR_CLIENTS={{ hostname_for_clients }}
+export SERVER_PORT={{ server_port }}
+export LOCATORS={{ locators }}
+
+export JVM_ARGS="--J=-XX:+UseParNewGC --J=-XX:MaxMetaspaceSize=256m --J=-XX:MetaspaceSize=256m --J=-XX:+DisableExplicitGC --J=-XX:+PrintGCDetails --J=-XX:+PrintGCTimeStamps --J=-XX:+PrintGCDateStamps --J=-XX:+PrintGCApplicationStoppedTime --J=-XX:+PrintGCApplicationConcurrentTime --J=-XX:+UseGCLogFileRotation --J=-XX:NumberOfGCLogFiles=20 --J=-XX:GCLogFileSize=1M --J=-XX:+UnlockDiagnosticVMOptions --J=-XX:ParGCCardsPerStrideChunk=32768 --J=-XX:OnOutOfMemoryError='kill -9 %p' --J=-XX:+ScavengeBeforeFullGC --J=-XX:+UseLargePagesInMetaspace --J=-XX:+UseNUMA --J=-XX:+UseConcMarkSweepGC --J=-XX:+CMSConcurrentMTEnabled --J=-XX:+CMSIncrementalMode --J=-XX:+UseCMSInitiatingOccupancyOnly --J=-XX:CMSInitiatingOccupancyFraction=60 --J=-XX:+CMSClassUnloadingEnabled --J=-XX:+CMSScavengeBeforeRemark --J=-XX:+CMSParallelRemarkEnabled --J=-XX:+ExplicitGCInvokesConcurrent --J=-XX:+ExplicitGCInvokesConcurrentAndUnloadsClasses"
+
+TOTAL_MEMORY=$(awk '/MemTotal/ {print int($2 / 1024)}' /proc/meminfo)
+AVAILABLE_MEMORY=$(awk '/MemAvailable/ {print int($2 / 1024)}' /proc/meminfo)
+
+if [ "$TOTAL_MEMORY" -lt 8192 ]; then
+  JVM_MEM=$(($TOTAL_MEMORY * 9 / 10))
+else
+  JVM_MEM=$(($TOTAL_MEMORY - 1024))
+fi
+
+if [ "$JVM_MEM" -lt 20480 ]; then
+  JVM_YG_MEM=$(($JVM_MEM / 10))
+else
+  JVM_YG_MEM=2048
+fi
+
+# check if we have enough memory to grab
+# what we are allocating to gemfire
+# if not warn and grab against the available memory value
+if [ "$AVAILABLE_MEMORY" -lt "$JVM_MEM" ]; then
+  JVM_MEM=$(($AVAILABLE_MEMORY * 9 / 10))
+  JVM_YG_MEM=$(($AVAILABLE_MEMORY / 10))
+  echo "WARNING: available memory is less than you have tried to allocate for gemfire. Dropping down to use 90% of available mem instead."
+fi
+
+export JVM_MEM
+export JVM_YG_MEM

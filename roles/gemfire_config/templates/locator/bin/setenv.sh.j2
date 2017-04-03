@@ -17,5 +17,3 @@ export LOCATOR_PORT={{ locator_port }}
 export LOCATORS={{ locators }}
 
 export JVM_ARGS="--J=-XX:MaxMetaspaceSize=112m --J=-XX:MetaspaceSize=112m --J=-XX:+CMSClassUnloadingEnabled --J=-XX:+UseParNewGC --J=-XX:+DisableExplicitGC --J=-XX:+PrintGCDetails --J=-XX:+PrintGCTimeStamps --J=-XX:+PrintGCDateStamps --J=-XX:+PrintGCApplicationStoppedTime --J=-XX:+PrintGCApplicationConcurrentTime --J=-XX:+UseGCLogFileRotation --J=-XX:NumberOfGCLogFiles=20 --J=-XX:GCLogFileSize=1M --J=-XX:OnOutOfMemoryError='kill -9 %p'"
-
-# --lock-memory=true

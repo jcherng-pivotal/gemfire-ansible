@@ -9,7 +9,7 @@
 - name: copy the common bin files to hosts
   template:
     src: "{{ item }}"
-    dest: "/usr/pivotal/gemfire/bin/{{ item | basename | regex_replace('\\.j2','') }}"
+    dest: "/usr/pivotal/gemfire/bin/"
     owner: gemfire
     group: pivotal
     mode: "u=rwx,g=r,o=r"
@@ -20,12 +20,34 @@
 - name: copy the common config files to hosts
   template:
     src: "{{ item }}"
-    dest: "/usr/pivotal/gemfire/config/{{ item | basename | regex_replace('\\.j2','') }}"
+    dest: "/usr/pivotal/gemfire/config/"
     owner: gemfire
     group: pivotal
     mode: "u=rw,g=r,o=r"
   with_fileglob:
     - "common/config/*"
+
+
+- name: copy the bin files to hosts
+  template:
+    src: "{{ item }}"
+    dest: "/usr/pivotal/gemfire/bin/"
+    owner: gemfire
+    group: pivotal
+    mode: "u=rwx,g=r,o=r"
+  with_fileglob:
+    - "{{ host_type }}/bin/*"
+
+
+- name: copy the config files to hosts
+  template:
+    src: "{{ item }}"
+    dest: "/usr/pivotal/gemfire/config/"
+    owner: gemfire
+    group: pivotal
+    mode: "u=rw,g=r,o=r"
+  with_fileglob:
+    - "{{ host_type }}/config/*"
 
 
 - name: copy the template bin files to hosts

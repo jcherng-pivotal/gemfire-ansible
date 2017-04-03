@@ -1,0 +1,76 @@
+#!/bin/bash
+
+set -ex
+
+source /usr/pivotal/gemfire/bin/setenv.sh
+source /usr/pivotal/gemfire/bin/pid_utils.sh
+
+PIDFILE=$GEMFIRE_STORE/vf.gf.server.pid
+
+mkdir -p $GEMFIRE_STORE $GEMFIRE_STORE/log
+chown -R gemfire:pivotal $GEMFIRE_STORE $GEMFIRE_STORE/log
+
+touch $GEMFIRE_STORE/log/server_ctl.std{out,err}.log
+
+exec > >(tee --append $GEMFIRE_STORE/log/server_ctl.stdout.log)
+exec 2> >(tee --append $GEMFIRE_STORE/log/server_ctl.stderr.log)
+
+echo -e "\n---- Executing subcommand: $1 $(date) ----"
+
+case $1 in
+  start)
+
+    pid_guard $PIDFILE ServerLauncher
+
+    sysctl -p $GEMFIRE_BASE/config/sysctl.gemfire.conf
+
+    exec gfsh start server \
+      --dir=$GEMFIRE_STORE \
+      --name=$SERVER_NAME \
+      --bind-address=$SERVER_BIND_ADDRESS \
+      --hostname-for-clients=$SERVER_HOSTNAME_FOR_CLIENTS \
+      --server-port=$SERVER_PORT \
+      --locators=$LOCATORS \
+      --properties-file=$GEMFIRE_BASE/config/gemfire.properties \
+      --security-properties-file=$GEMFIRE_BASE/config/gfsecurity.properties \
+      --start-rest-api=false \
+      --http-service-port=7070 \
+      --use-cluster-configuration=true \
+      --J=-XX:NewSize=${JVM_YG_MEM}m \
+      --J=-XX:MaxNewSize=${JVM_YG_MEM}m \
+      --J=-Xloggc:$GEMFIRE_STORE/log/server_gc.log \
+      --J=-Xmx${JVM_MEM}m \
+      --J=-Xms${JVM_MEM}m \
+      --J=-Dgemfire.OSProcess.ENABLE_OUTPUT_REDIRECTION=true \
+      --classpath=$CLASSPATH \
+      $JVM_ARGS
+    ;;
+
+  stop)
+    set +x
+
+    stop_server_with_locator() {
+      local locator=$1
+
+      echo 'gfsh -e "connect --locator='${locator}'" ' \
+        '-e "stop server --name='${SERVER_NAME}' "'
+
+      gfsh -e "connect --locator='${locator}'" \
+        -e "stop server --name='${SERVER_NAME}' "
+    }
+
+    {% for host in groups['gf_locators'] -%}
+      stop_server_with_locator {{ hostvars[host]['bind_address'] }}[{{ hostvars[host]['locator_port'] }}] || \
+    {% endfor -%}
+    true
+
+    set -x
+
+    kill_and_wait $PIDFILE
+    ;;
+
+  *)
+    echo "Usage: server_ctl {start|stop}"
+    ;;
+
+esac

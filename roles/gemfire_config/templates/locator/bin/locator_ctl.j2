@@ -28,7 +28,7 @@ case $1 in
       --bind-address=$LOCATOR_BIND_ADDRESS \
       --hostname-for-clients=$LOCATOR_HOSTNAME_FOR_CLIENTS \
       --port=$LOCATOR_PORT \
-      --locators="$LOCATORS" \
+      --locators=$LOCATORS \
       --properties-file=$GEMFIRE_BASE/config/gemfire.properties \
       --security-properties-file=$GEMFIRE_BASE/config/gfsecurity.properties \
       --max-heap=512m \

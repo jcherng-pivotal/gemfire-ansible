@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+source /usr/pivotal/gemfire/bin/setenv.sh
+source /usr/pivotal/gemfire/bin/pid_utils.sh
+
+NUM_RETRIES=30
+SLEEP_TIME=5
+
+check_membership_on_locator() {
+  local locator=$1
+
+  members="$(gfsh -e "connect --locator='${locator}'" -e "list members" || true)"
+  if grep "$SERVER_NAME" <(echo "$members"); then
+    exit 0
+  fi
+}
+
+for i in $(seq 1 "$NUM_RETRIES"); do
+
+  {% for host in groups['gf_locators']%}
+    check_membership_on_locator {{ hostvars[host]['bind_address'] }}[{{ hostvars[host]['locator_port'] }}]
+  {% endfor %}
+
+  sleep "$SLEEP_TIME"
+done
+
+echo "ERROR: Member never joined the cluster"
+exit 1
