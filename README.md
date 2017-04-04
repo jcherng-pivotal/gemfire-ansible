@@ -16,8 +16,8 @@ GemFire automation through Ansible
 This playbook is meant to be self-contained as much as possible. The bootstrap script will install minimal required softwares, e.g. pip, ansible, and brew to the Mac machine.
 
 Download the folowing files and place under gemfire-ansible/files/:
-* jdk-8u121-linux-x64.rpm (from Oracle)
-* pivotal-gemfire-9.0.2.zip (from Pivotal)
+* jdk-8u121-linux-x64.rpm (from Oracle) - http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+* pivotal-gemfire-9.0.3.zip (from Pivotal) - https://network.pivotal.io/products/pivotal-gemfire
 
 under gemfire-ansible, run the following commands to getup local gemfire cluster (docker):
 ```

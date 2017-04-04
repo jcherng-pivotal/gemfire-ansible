@@ -11,4 +11,4 @@ gemfire_dirs:
   - /usr/pivotal/gemfire/app/config
   - /usr/pivotal/gemfire/app/lib
   - /var/pivotal/gemfire
-gemfire_archived_file: pivotal-gemfire-9.0.2.zip
+gemfire_archived_file: pivotal-gemfire-9.0.3.zip
