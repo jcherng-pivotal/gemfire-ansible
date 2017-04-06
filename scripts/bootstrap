@@ -19,7 +19,7 @@ then
     sudo easy_install pip
 fi
 
-sudo pip install --upgrade -r requirements.txt
+sudo pip install --force-reinstall --ignore-installed --upgrade -r requirements.txt
 
 if [ ! `which brew` ]
 then
@@ -27,4 +27,4 @@ then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
-sudo brew update
+brew update
