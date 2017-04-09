@@ -1,0 +1,8 @@
+---
+
+- name: wait for gemfire docker machine stopped
+  wait_for:
+    host: "{{ docker_machine_ip }}"
+    port: 2376
+    delay: 10
+    state: stopped

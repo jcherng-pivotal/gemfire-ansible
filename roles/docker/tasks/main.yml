@@ -19,20 +19,27 @@
     - brew
     - docker
 
+- include: set_gemfire_docker_machine_ip.yml
+
 - name: force remove existing gemfire docker machine
   command: docker-machine rm -f gemfire
 
+- include: wait_for_gemfire_docker_machine_stopped.yml
+
 - name: create gemfire docker machine for gemfire network and containers
   command: docker-machine create --driver virtualbox gemfire
+  ignore_errors: yes
+
+- include: set_gemfire_docker_machine_ip.yml
+
+- include: wait_for_gemfire_docker_machine_started.yml
 
 # - name: setup static ip (192.168.99.50) for gemfire docker machine
 #   shell: echo "kill `more /var/run/udhcpc.eth1.pid`\nifconfig eth1 192.168.99.50 netmask 255.255.255.0 broadcast 192.168.99.255 up" | docker-machine ssh gemfire sudo tee /var/lib/boot2docker/bootsync.sh > /dev/null
 
-- name: restart gemfire docker machine
-  command: docker-machine restart gemfire
 
-- name: regenerate the certs for gemfrie docker machine
-  shell: docker-machine regenerate-certs -f gemfire
+- name: eval gemfire docker machine env
+  shell: eval $(docker-machine env gemfire)
 
 - name: setup network route for the gemfire containers
   shell: sudo /sbin/route -n add -net 172.18.0.0 -netmask 255.255.0.0 -gateway $(docker-machine ip gemfire)

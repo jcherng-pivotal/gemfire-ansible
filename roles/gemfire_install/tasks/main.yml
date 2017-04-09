@@ -32,3 +32,10 @@
     dest: /opt/pivotal
   become: true
   become_method: sudo
+
+
+- name: confirm gemfire instalation
+  stat:
+    path: /opt/pivotal/pivotal-gemfire-9.0.3/Pivotal-EULA
+  register: pivotal_eula
+  until: pivotal_eula.stat.readable is defined and pivotal_eula.stat.readable

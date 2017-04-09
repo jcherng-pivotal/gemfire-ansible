@@ -1,0 +1,11 @@
+---
+
+- name: wait for gemfire docker machine started
+  wait_for:
+    host: "{{ docker_machine_ip }}"
+    port: 2376
+    delay: 10
+    state: started
+
+- name: check gemfire docker machine status
+  command: docker-machine status gemfire

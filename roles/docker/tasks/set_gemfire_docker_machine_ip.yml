@@ -1,0 +1,14 @@
+---
+
+- name: register docker_machine_ip_echo
+  shell: echo $(docker-machine ip gemfire)
+  register: docker_machine_ip_echo
+
+
+- name: set fact for docker_machine_ip
+  set_fact:
+    docker_machine_ip: "{{ docker_machine_ip_echo.stdout }}"
+
+
+- debug:
+    var: docker_machine_ip

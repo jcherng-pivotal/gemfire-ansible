@@ -19,7 +19,10 @@ then
     sudo easy_install pip
 fi
 
-sudo pip install --force-reinstall --ignore-installed --upgrade -r requirements.txt
+sudo -H pip install --force-reinstall --ignore-installed --upgrade -r requirements.txt
+sudo ansible-galaxy remove williamyeh.oracle-java
+sudo ansible-galaxy install williamyeh.oracle-java
+sudo chown -R ${USER:=$(/usr/bin/id -run)}:${GROUP:=$(/usr/bin/id -g -n $USER)} ~/.ansible*
 
 if [ ! `which brew` ]
 then

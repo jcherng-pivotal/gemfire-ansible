@@ -1,11 +1,19 @@
-
 ---
 
-- name: prepare gemfire user and pivotal group
-  command: "{{ item }}"
-  with_items:
-    - groupadd -f pivotal
-    - usermod -g pivotal gemfire
+# - name: prepare gemfire user and pivotal group
+#   command: "{{ item }}"
+#   with_items:
+#     - groupadd -f pivotal
+#     - usermod -g pivotal gemfire
+
+- name: prepare pivotal group
+  group:
+    name: pivotal
+
+- name: prepare gemfire user
+  user:
+    name: gemfire
+    group: pivotal
 
 # this fix is needed for williamyeh.oracle-java (install Oracle JDK) to work
 - name: fix tsflags=nodocs of /etc/yum.conf

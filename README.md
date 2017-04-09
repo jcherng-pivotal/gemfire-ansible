@@ -2,13 +2,15 @@
 
 GemFire automation through Ansible
 
-## Requirements
+## Requirements (General)
 
 * Pip (installed in setup script if missing)
 * Ansible (installed in setup script if missing)
 
-## Optional (Mac Only)
+## Requirements (Mac Only)
 
+* macOS version 10.10 or newer
+* Xcode
 * Homebrew (installed in setup script if missing)
 
 ## Local Testing (Mac Only)
@@ -19,10 +21,19 @@ Download the folowing files and place under gemfire-ansible/files/:
 * jdk-8u121-linux-x64.rpm (from Oracle) - http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 * pivotal-gemfire-9.0.3.zip (from Pivotal) - https://network.pivotal.io/products/pivotal-gemfire
 
-under gemfire-ansible, run the following commands to getup local gemfire cluster (docker):
+Xcode will need to be installed:
+```
+xcode-select --install
+```
+
+Make ${HOME}/.ssh/id_rsa.pub is present. If the file is not present, use the following command to create one:
+```
+ssh-keygen -t rsa
+```
+
+under gemfire-ansible directory, run the following commands to getup local gemfire cluster (docker):
 ```
 scripts/bootstrap
-sudo ansible-galaxy install williamyeh.oracle-java
 ansible-playbook playbook_gemfire_containers_setup.yml
 ansible-playbook -i hosts playbook_gemfire_install_config.yml
 ansible-playbook -i hosts playbook_gemfire_rolling_restart.yml

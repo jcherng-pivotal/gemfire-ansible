@@ -3,8 +3,6 @@ pivotal_dirs:
   - /usr/pivotal
   - /var/pivotal
 gemfire_dirs:
-  - /usr/pivotal/gemfire
-  - /usr/pivotal/gemfire/app
   - /usr/pivotal/gemfire/bin
   - /usr/pivotal/gemfire/config
   - /usr/pivotal/gemfire/lib
