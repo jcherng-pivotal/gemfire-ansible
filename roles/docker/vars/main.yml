@@ -3,6 +3,8 @@
 home_dir: "{{ lookup('env', 'HOME') }}"
 docker_brew_cask_apps:
   - name: docker
+    install_options: force
   - name: docker-toolbox
+    install_options: force
 docker_brew_packages:
   - name: docker-machine-driver-xhyve

@@ -20,9 +20,12 @@ then
 fi
 
 sudo -H pip install --force-reinstall --ignore-installed --upgrade -r requirements.txt
-sudo ansible-galaxy remove williamyeh.oracle-java
-sudo ansible-galaxy install williamyeh.oracle-java
-sudo chown -R ${USER:=$(/usr/bin/id -run)}:${GROUP:=$(/usr/bin/id -g -n $USER)} ~/.ansible*
+# sudo ansible-galaxy remove williamyeh.oracle-java
+# sudo ansible-galaxy install williamyeh.oracle-java
+# sudo chown -R ${USER:=$(/usr/bin/id -run)}:${GROUP:=$(/usr/bin/id -g -n $USER)} ~/.ansible*
+sudo chown -R `whoami` /usr/local/lib/python2.7/site-packages/
+sudo chown -R `whoami` ~/.ansible*
+
 
 if [ ! `which brew` ]
 then
@@ -31,3 +34,6 @@ then
 fi
 
 brew update
+brew install ansible
+ansible-galaxy remove williamyeh.oracle-java
+ansible-galaxy install williamyeh.oracle-java

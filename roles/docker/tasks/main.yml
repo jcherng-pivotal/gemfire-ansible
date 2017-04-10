@@ -1,7 +1,9 @@
 ---
 
 - name: install updated docker brew cask applications
-  command: "brew cask install {{ item.force | default('') }} {{ item.name }}"
+  homebrew_cask:
+    name: "{{ item.name }}"
+    install_options: "{{ item.install_options | default('') }}"
   with_items: "{{ docker_brew_cask_apps }}"
   tags:
     - brew

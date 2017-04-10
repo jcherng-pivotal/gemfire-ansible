@@ -26,7 +26,7 @@ Xcode will need to be installed:
 xcode-select --install
 ```
 
-Make ${HOME}/.ssh/id_rsa.pub is present. If the file is not present, use the following command to create one:
+Make sure ${HOME}/.ssh/id_rsa.pub is present. If the file is not present, use the following command to create one:
 ```
 ssh-keygen -t rsa
 ```
