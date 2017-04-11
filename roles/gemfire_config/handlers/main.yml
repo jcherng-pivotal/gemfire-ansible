@@ -1,0 +1,5 @@
+---
+- name: remove deploy_config.lock
+  file:
+    path: /usr/pivotal/gemfire/deploy_config.lock
+    state: absent

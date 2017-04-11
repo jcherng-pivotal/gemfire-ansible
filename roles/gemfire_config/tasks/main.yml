@@ -6,13 +6,7 @@
     locators: "{% set comma = joiner(',') %}{% for host in groups['gf_locators'] -%}{{ comma() }}{{ hostvars[host]['bind_address'] }}[{{ hostvars[host]['locator_port'] }}]{%- endfor %}"
 
 
-
-- name: temp workaround for potential ansible bug(s) - copy the common bin files to hosts
-  file:
-    path: "/usr/pivotal/gemfire/bin/{{ item | basename }}"
-    state: touch
-  with_fileglob:
-    - "common/bin/*"
+- include: template_copy_bug_workaround.yml
 
 
 - name: copy the common bin files to hosts
@@ -26,14 +20,6 @@
     - "common/bin/*"
 
 
-- name: temp workaround for potential ansible bug(s) - copy the common config files to hosts
-  file:
-    path: "/usr/pivotal/gemfire/config/{{ item | basename }}"
-    state: touch
-  with_fileglob:
-    - "common/config/*"
-
-
 - name: copy the common config files to hosts
   template:
     src: "{{ item }}"
@@ -45,14 +31,6 @@
     - "common/config/*"
 
 
-- name: temp workaround for potential ansible bug(s) - copy the bin files to hosts
-  file:
-    path: "/usr/pivotal/gemfire/bin/{{ item | basename }}"
-    state: touch
-  with_fileglob:
-    - "{{ host_type }}/bin/*"
-
-
 - name: copy the bin files to hosts
   template:
     src: "{{ item }}"
@@ -62,14 +40,6 @@
     mode: "u=rwx,g=r,o=r"
   with_fileglob:
     - "{{ host_type }}/bin/*"
-
-
-- name: temp workaround for potential ansible bug(s) - copy the config files to hosts
-  file:
-    path: "/usr/pivotal/gemfire/config/{{ item | basename }}"
-    state: touch
-  with_fileglob:
-    - "{{ host_type }}/config/*"
 
 
 - name: copy the config files to hosts

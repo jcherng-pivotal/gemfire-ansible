@@ -1,0 +1,16 @@
+---
+- name: temp workaround for potential ansible bug(s)
+  file:
+    path: /usr/pivotal/gemfire/deploy_config.lock
+    state: touch
+
+
+- name: temp workaround for potential ansible bug(s)
+  template:
+    src: deploy_config.lock
+    dest: /usr/pivotal/gemfire/deploy_config.lock
+    owner: gemfire
+    group: pivotal
+    mode: "u=rwx,g=r,o=r"
+  notify:
+    - remove deploy_config.lock
