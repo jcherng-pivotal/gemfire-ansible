@@ -5,24 +5,21 @@
   hosts: localhost
   roles:
     - docker
-  # environment:
-  #   DOCKER_HOST: tcp://192.168.99.50:2376
-  #   DOCKER_CERT_PATH: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire"
-  #   DOCKER_TLS_VERIFY: 1
-  post_tasks:
-    - name: register docker_host_echo
-      shell: echo tcp://$(docker-machine ip gemfire):2376
-      register: docker_host_echo
-    - name: set facts for docker containers
-      set_fact:
-        docker_host: "{{ docker_host_echo.stdout }}"
-        cert_path: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire/cert.pem"
-        key_path: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire/key.pem"
-        tls_verify: 1
 
 
 - name: setup gemfire docker network and containers
   hosts: localhost
+  pre_tasks:
+    - name: register gemfire_docker_machine_ip_echo
+      shell: echo $(docker-machine ip gemfire)
+      register: gemfire_docker_machine_ip_echo
+    - name: set facts for docker containers
+      set_fact:
+        docker_host: "tcp://{{ gemfire_docker_machine_ip_echo.stdout }}:2376"
+        tls_verify: 1
+        cacert_path: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire/ca.pem"
+        cert_path: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire/cert.pem"
+        key_path: "{{ lookup('env', 'HOME') }}/.docker/machine/machines/gemfire/key.pem"
   roles:
     - docker_provision_gemfire_network
     - docker_provision_gemfire_containers

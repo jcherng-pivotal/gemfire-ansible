@@ -4,9 +4,10 @@
 - name: create the gemfire network
   docker_network:
     docker_host: "{{ docker_host }}"
+    tls_verify: "{{ tls_verify }}"
+    cacert_path: "{{ cacert_path }}"
     cert_path: "{{ cert_path }}"
     key_path: "{{ key_path }}"
-    tls_verify: "{{ tls_verify }}"
     name: gemfire-net
     driver_options:
       com.docker.network.bridge.name: "gemfire-net"
